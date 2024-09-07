@@ -57,6 +57,7 @@ from .const import (
     DEFAULT_TOP_P,
     DEFAULT_USE_TOOLS,
     DOMAIN,
+    CONF_HTTPS_PROXY_URL,
 )
 from .helpers import validate_authentication
 
@@ -72,6 +73,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Optional(
             CONF_SKIP_AUTHENTICATION, default=DEFAULT_SKIP_AUTHENTICATION
         ): bool,
+        vol.Optional(CONF_HTTPS_PROXY_URL): str,
     }
 )
 

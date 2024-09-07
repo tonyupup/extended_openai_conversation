@@ -8,6 +8,7 @@ DEFAULT_CONF_BASE_URL = "https://api.openai.com/v1"
 CONF_API_VERSION = "api_version"
 CONF_SKIP_AUTHENTICATION = "skip_authentication"
 DEFAULT_SKIP_AUTHENTICATION = False
+CONF_HTTPS_PROXY_URL = "https_proxy" 
 
 EVENT_AUTOMATION_REGISTERED = "automation_registered_via_extended_openai_conversation"
 EVENT_CONVERSATION_FINISHED = "extended_openai_conversation.conversation.finished"

@@ -1,4 +1,5 @@
 """The OpenAI Conversation integration."""
+
 from __future__ import annotations
 
 import json
@@ -63,6 +64,7 @@ from .const import (
     DEFAULT_USE_TOOLS,
     DOMAIN,
     EVENT_CONVERSATION_FINISHED,
+    CONF_HTTPS_PROXY_URL,
 )
 from .exceptions import (
     FunctionLoadFailed,
@@ -130,6 +132,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 
 
+import httpx
+
+
 class OpenAIAgent(conversation.AbstractConversationAgent):
     """OpenAI conversation agent."""
 
@@ -139,18 +144,24 @@ class OpenAIAgent(conversation.AbstractConversationAgent):
         self.entry = entry
         self.history: dict[str, list[dict]] = {}
         base_url = entry.data.get(CONF_BASE_URL)
+        proxy_url = entry.data.get(CONF_HTTPS_PROXY_URL)
+
+        http_client = httpx.AsyncClient(proxy=proxy_url) if proxy_url else None
+
         if is_azure(base_url):
             self.client = AsyncAzureOpenAI(
                 api_key=entry.data[CONF_API_KEY],
                 azure_endpoint=base_url,
                 api_version=entry.data.get(CONF_API_VERSION),
                 organization=entry.data.get(CONF_ORGANIZATION),
+                http_client=http_client,
             )
         else:
             self.client = AsyncOpenAI(
                 api_key=entry.data[CONF_API_KEY],
                 base_url=base_url,
                 organization=entry.data.get(CONF_ORGANIZATION),
+                http_client=http_client,
             )
 
     @property
