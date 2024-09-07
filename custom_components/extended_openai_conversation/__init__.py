@@ -32,6 +32,7 @@ from homeassistant.helpers import (
     template,
 )
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.httpx_client import create_async_httpx_client
 from homeassistant.util import ulid
 
 from .const import (
@@ -132,8 +133,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 
 
-import httpx
-
 
 class OpenAIAgent(conversation.AbstractConversationAgent):
     """OpenAI conversation agent."""
@@ -146,7 +145,7 @@ class OpenAIAgent(conversation.AbstractConversationAgent):
         base_url = entry.data.get(CONF_BASE_URL)
         proxy_url = entry.data.get(CONF_HTTPS_PROXY_URL)
 
-        http_client = httpx.AsyncClient(proxy=proxy_url) if proxy_url else None
+        http_client = create_async_httpx_client(hass, proxy=proxy_url) if proxy_url else None
 
         if is_azure(base_url):
             self.client = AsyncAzureOpenAI(
